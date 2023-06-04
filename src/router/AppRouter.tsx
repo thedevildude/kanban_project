@@ -6,7 +6,7 @@ const routes = {
   "/": () => <Redirect to="/login" />,
   "/login": () => <Login />,
   "/signup": () => <Signup />,
-}
+};
 
 export default function AppRouter() {
   const routeResult = useRoutes(routes);
