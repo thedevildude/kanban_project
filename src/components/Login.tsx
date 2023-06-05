@@ -1,16 +1,40 @@
-import { Link } from "raviger";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { navigate, Link } from "raviger";
 import TextInput from "./InputComponents/TextInput";
+import { login } from "../utils/apiUtils";
 
 const Login = () => {
   const [loginCredential, setLoginCredential] = useState({
-    email: "",
+    username: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(loginCredential);
+    try {
+      const response = await login(
+        loginCredential.username,
+        loginCredential.password
+      );
+      if (response.token === undefined) {
+        throw new Error("*Invalid credentials");
+      }
+      localStorage.setItem("token", response.token);
+      navigate("/");
+    } catch (error) {
+      setError((error as Error).message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
   };
 
   return (
@@ -30,15 +54,15 @@ const Login = () => {
             className="flex flex-col gap-7"
           >
             <TextInput
-              label="Email Address"
+              label="username Address"
               placeholder="name@company.com"
-              value={loginCredential.email}
-              type="email"
-              id="email"
+              value={loginCredential.username}
+              type="text"
+              id="username"
               handleChangeCB={(e) =>
                 setLoginCredential({
                   ...loginCredential,
-                  email: e.target.value,
+                  username: e.target.value,
                 })
               }
             />
@@ -58,6 +82,9 @@ const Login = () => {
               />
               <button className="text-xs text-left">Forget Password?</button>
             </div>
+            {error.length > 0 && (
+              <p className="text-sm text-red-400">{error}</p>
+            )}
             <div className="flex gap-2 text-sm items-center">
               <input type="checkbox" id="remember" className="w-4 h-4" />
               <label htmlFor="remember" className="text-gray-400">
