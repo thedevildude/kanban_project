@@ -1,6 +1,7 @@
 import { useRoutes, Redirect } from "raviger";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
+import AppContainer from "../components/AppContainer";
 
 const routes = {
   "/": () => <Redirect to="/login" />,
@@ -10,5 +11,5 @@ const routes = {
 
 export default function AppRouter() {
   const routeResult = useRoutes(routes);
-  return routeResult;
+  return <AppContainer>{routeResult}</AppContainer>;
 }
