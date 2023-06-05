@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Header from "./base/Header";
 import { navigate } from "raviger";
 
 const Home = () => {
@@ -12,7 +11,7 @@ const Home = () => {
 
   return (
     <div className="w-full">
-      <Header />
+      <p className="text-2xl font-bold text-center">Home</p>
     </div>
   );
 };
