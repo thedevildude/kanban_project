@@ -1,10 +1,11 @@
-import { useRoutes, Redirect } from "raviger";
+import { useRoutes } from "raviger";
+import Home from "../components/Home";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import AppContainer from "../components/AppContainer";
 
 const routes = {
-  "/": () => <Redirect to="/login" />,
+  "/": () => <Home />,
   "/login": () => <Login />,
   "/signup": () => <Signup />,
 };
