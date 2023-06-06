@@ -5,7 +5,7 @@ import { createBoard } from "../../utils/apiUtils";
 import TextInput from "./TextInput";
 
 const CreateBoard = () => {
-  const [board, setBoard] = useState<Board>({
+  const [board, setBoard] = useState<Omit<Board, "id">>({
     title: "",
     description: "",
   });

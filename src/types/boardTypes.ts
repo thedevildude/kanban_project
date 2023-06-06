@@ -1,12 +1,12 @@
 export type Board = {
-  id?: number;
+  id: number;
   title: string;
   description: string;
 };
 
 export type Errors<T> = Partial<Record<keyof T, string>>;
 
-export const validateBoard = (board: Board) => {
+export const validateBoard = (board: Omit<Board, "id">) => {
   const errors: Errors<Board> = {};
   if (board.title.length < 1) {
     errors.title = "Title is required";

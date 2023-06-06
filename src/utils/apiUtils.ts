@@ -63,10 +63,10 @@ export const me = async () => {
   return await request("users/me/", "GET");
 };
 
-export const createBoard = async (board: Board) => {
+export const createBoard = async (board: Omit<Board, "id">) => {
   return await request("boards/", "POST", board);
 };
 
-export const getBoards = async (pageParams: PaginationParams) => {
+export const getBoards = async (pageParams?: PaginationParams) => {
   return await request("boards/", "GET", pageParams);
 };
