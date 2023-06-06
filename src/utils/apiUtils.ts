@@ -70,3 +70,15 @@ export const createBoard = async (board: Omit<Board, "id">) => {
 export const getBoards = async (pageParams?: PaginationParams) => {
   return await request("boards/", "GET", pageParams);
 };
+
+export const getBoard = async (id: number) => {
+  return await request(`boards/${id}/`, "GET");
+};
+
+export const getStatuses = async (pageParams?: PaginationParams) => {
+  return await request("status/", "GET", pageParams);
+};
+
+export const getTasks = async (boardId: number, pageParams?: PaginationParams) => {
+  return await request(`boards/${boardId}/tasks/`, "GET", pageParams);
+}

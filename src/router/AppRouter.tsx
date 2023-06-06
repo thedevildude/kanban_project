@@ -3,21 +3,27 @@ import Home from "../components/pages/Home";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import AppContainer from "../components/AppContainer";
-import Header from "../components/layout/Layout";
+import Layout from "../components/layout/Layout";
 import Boards from "../components/pages/Boards";
+import KanbanBoard from "../components/pages/KanbanBoard";
 
 const routes = {
   "/": () => (
-    <Header>
+    <Layout>
       <Home />
-    </Header>
+    </Layout>
   ),
   "/login": () => <Login />,
   "/signup": () => <Signup />,
   "/boards": () => (
-    <Header>
+    <Layout>
       <Boards />
-    </Header>
+    </Layout>
+  ),
+  "/boards/:boardId": ({ boardId }: { boardId: string }) => (
+    <Layout>
+      <KanbanBoard boardId={Number(boardId)} />
+    </Layout>
   ),
 };
 
