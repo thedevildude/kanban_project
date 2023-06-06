@@ -3,7 +3,7 @@ import Home from "../components/pages/Home";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import AppContainer from "../components/AppContainer";
-import Header from "../components/layout/Header";
+import Header from "../components/layout/Layout";
 import Boards from "../components/pages/Boards";
 
 const routes = {

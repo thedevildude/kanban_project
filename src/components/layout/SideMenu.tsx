@@ -6,8 +6,8 @@ const SideMenu = (props: { isOpen: boolean }) => {
 
   return (
     <div
-      className={`fixed left-0 inset-y-0 w-64 bg-gray-100 transform transition-transform duration-300 ease-in-out ${
-        props.isOpen ? "translate-x-0" : "-translate-x-full"
+      className={`inset-y-0 w-64 bg-gray-100 transform transition-transform duration-300 ease-in-out ${
+        props.isOpen ? "block" : "hidden"
       }`}
     >
       <div className="flex flex-col mt-24">
