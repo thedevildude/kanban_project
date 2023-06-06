@@ -14,21 +14,21 @@ const Layout = (props: { children: React.ReactNode }) => {
   return (
     <div className="flex w-full">
       <SideMenu isOpen={isMenuOpen} />
+      {isMenuOpen ? (
+        <BiChevronLeft
+          className="h-8 w-8 text-gray-500 cursor-pointer fixed top-8 left-28 z-10"
+          onClick={toggleMenu}
+        />
+      ) : (
+        <BiMenu
+          className="h-8 w-8 text-gray-500 cursor-pointer fixed top-8 left-28 z-10"
+          onClick={toggleMenu}
+        />
+      )}
       <div className="flex flex-col flex-1">
         <div className="grid grid-cols-3 px-10 py-5 gap-5 items-center border-b border-gray-400">
-          <div className="flex items-center gap-20">
+          <div className="flex items-center">
             <p className="text-2xl font-bold">LOGO</p>
-            {isMenuOpen ? (
-              <BiChevronLeft
-                className="h-8 w-8 text-gray-500 cursor-pointer z-10"
-                onClick={toggleMenu}
-              />
-            ) : (
-              <BiMenu
-                className="h-8 w-8 text-gray-500 cursor-pointer z-10"
-                onClick={toggleMenu}
-              />
-            )}
           </div>
           <div className="flex items-center gap-5">
             <SearchInput />
