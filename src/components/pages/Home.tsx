@@ -11,7 +11,7 @@ const Home = () => {
 
   return (
     <div className="w-full">
-      <p className="text-2xl font-bold text-center">Home</p>
+      <p className="text-2xl font-bold">Home</p>
     </div>
   );
 };

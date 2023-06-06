@@ -36,7 +36,7 @@ const Header = (props: { children: React.ReactNode }) => {
         </div>
         <UserMenu />
       </div>
-      <div className="">{props.children}</div>
+      <div className="p-10">{props.children}</div>
     </div>
   );
 };
