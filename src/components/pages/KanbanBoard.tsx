@@ -23,7 +23,12 @@ type InitializeTasks = {
   payload: TaskList;
 };
 
-type TaskAction = InitializeTasks;
+type AddTask = {
+  type: "ADD_TASK";
+  payload: Task;
+};
+
+type TaskAction = InitializeTasks | AddTask;
 
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
@@ -34,6 +39,11 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
         description: action.payload.description,
         tasks: action.payload.tasks,
         statuses: action.payload.statuses,
+      };
+    case "ADD_TASK":
+      return {
+        ...state,
+        tasks: [...state.tasks, action.payload],
       };
     default:
       return state;
@@ -91,7 +101,18 @@ const KanbanBoard = (props: { boardId: number }) => {
           icon={<CgAddR className="h-5 w-5" />}
         />
         <Modal open={newTask} closeCB={() => setNewTask(false)}>
-          <CreateTask />
+          <CreateTask
+            boardId={props.boardId}
+            closeModelCB={() => setNewTask(false)}
+            addTaskCB={(task) =>
+              dispatch({
+                type: "ADD_TASK",
+                payload: {
+                  ...task,
+                },
+              })
+            }
+          />
         </Modal>
       </div>
       <TaskContainer statuses={state.statuses} tasks={state.tasks} />

@@ -1,5 +1,6 @@
 import { Board } from "../types/boardTypes";
 import { PaginationParams } from "../types/common";
+import { Task } from "../types/taskTypes";
 const API_BASE_URL = "http://localhost:8000/api/";
 
 type DataParams =
@@ -79,6 +80,13 @@ export const getStatuses = async (pageParams?: PaginationParams) => {
   return await request("status/", "GET", pageParams);
 };
 
-export const getTasks = async (boardId: number, pageParams?: PaginationParams) => {
+export const getTasks = async (
+  boardId: number,
+  pageParams?: PaginationParams
+) => {
   return await request(`boards/${boardId}/tasks/`, "GET", pageParams);
-}
+};
+
+export const createTask = async (task: Task) => {
+  return await request(`boards/${task.board}/tasks/`, "POST", task);
+};
