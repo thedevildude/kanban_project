@@ -2,6 +2,7 @@ import { navigate } from "raviger";
 import React, { useState } from "react";
 import { Board, Errors, validateBoard } from "../../types/boardTypes";
 import { createBoard } from "../../utils/apiUtils";
+import TextInput from "./TextInput";
 
 const CreateBoard = () => {
   const [board, setBoard] = useState<Board>({
@@ -28,42 +29,35 @@ const CreateBoard = () => {
       <h1 className="text-2xl my-2 text-gray-700">Create board</h1>
       <form className="py-4" onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label
-            htmlFor="title"
-            className={`${errors.title ? "text-red-500" : ""}`}
-          >
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            className={`border-2 border-gray-200 rounded-lg p-2 m-2 flex-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none w-full ${
-              errors.title ? "border-red-500" : ""
-            }`}
+          <TextInput
+            label="Title"
+            placeholder="board title"
             value={board.title}
-            onChange={(e) => setBoard({ ...board, title: e.target.value })}
+            type="text"
+            id="title"
+            handleChangeCB={(e) =>
+              setBoard({
+                ...board,
+                title: e.target.value,
+              })
+            }
           />
           {errors.title && (
             <p className="text-red-500 text-sm">{errors.title}</p>
           )}
         </div>
         <div className="mb-4">
-          <label
-            htmlFor="description"
-            className={`${errors.description ? "text-red-500" : ""}`}
-          >
-            Description
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            className={`border-2 border-gray-200 rounded-lg p-2 m-2 flex-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none w-full ${
-              errors.description ? "border-red-500" : ""
-            }`}
+          <TextInput
+            label="Description"
+            placeholder="board description"
             value={board.description}
-            onChange={(e) =>
-              setBoard({ ...board, description: e.target.value })
+            type="text"
+            id="description"
+            handleChangeCB={(e) =>
+              setBoard({
+                ...board,
+                description: e.target.value,
+              })
             }
           />
           {errors.description && (

@@ -54,7 +54,7 @@ const Login = () => {
             className="flex flex-col gap-7"
           >
             <TextInput
-              label="username Address"
+              label="Username"
               placeholder="name@company.com"
               value={loginCredential.username}
               type="text"

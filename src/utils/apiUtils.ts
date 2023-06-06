@@ -65,4 +65,8 @@ export const me = async () => {
 
 export const createBoard = async (board: Board) => {
   return await request("boards/", "POST", board);
-}
+};
+
+export const getBoards = async (pageParams: PaginationParams) => {
+  return await request("boards/", "GET", pageParams);
+};

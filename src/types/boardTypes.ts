@@ -1,7 +1,7 @@
 export type Board = {
   id?: number;
   title: string;
-  description?: string;
+  description: string;
 };
 
 export type Errors<T> = Partial<Record<keyof T, string>>;
