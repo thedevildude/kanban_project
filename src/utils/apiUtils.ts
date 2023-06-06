@@ -1,3 +1,4 @@
+import { Board } from "../types/boardTypes";
 import { PaginationParams } from "../types/common";
 const API_BASE_URL = "http://localhost:8000/api/";
 
@@ -61,3 +62,7 @@ export const login = async (username: string, password: string) => {
 export const me = async () => {
   return await request("users/me/", "GET");
 };
+
+export const createBoard = async (board: Board) => {
+  return await request("boards/", "POST", board);
+}

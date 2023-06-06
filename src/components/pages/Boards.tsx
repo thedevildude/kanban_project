@@ -8,7 +8,7 @@ import { CgAddR } from "react-icons/cg";
 const Boards = () => {
   const [newBoard, setNewBoard] = useState(false);
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col gap-5 w-full">
       <p className="text-2xl font-bold">My Boards</p>
       <div className="flex justify-between">
         <DropdownMenu
@@ -18,7 +18,7 @@ const Boards = () => {
         <AddNewButton
           buttonClickCB={() => setNewBoard(true)}
           label="New Board"
-          icon={<CgAddR className="h-5 w-5"/>}
+          icon={<CgAddR className="h-5 w-5" />}
         />
         <Modal open={newBoard} closeCB={() => setNewBoard(false)}>
           <CreateBoard />
