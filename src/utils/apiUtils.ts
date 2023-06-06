@@ -76,6 +76,10 @@ export const getBoard = async (id: number) => {
   return await request(`boards/${id}/`, "GET");
 };
 
+export const deleteBoard = async (id: number) => {
+  return await request(`boards/${id}/`, "DELETE");
+};
+
 export const getStatuses = async (pageParams?: PaginationParams) => {
   return await request("status/", "GET", pageParams);
 };

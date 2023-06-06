@@ -1,11 +1,13 @@
 import { Link } from "raviger";
 import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
+import { deleteBoard } from "../../utils/apiUtils";
 
 type Props = {
   id: number;
   title: string;
   description: string;
+  deleteBoardCB: (id: number) => void;
 };
 
 const BoardCard = (props: Props) => {
@@ -33,7 +35,16 @@ const BoardCard = (props: Props) => {
           >
             <div className="flex flex-col gap-2 p-2">
               <button className="hover:bg-gray-200">Edit</button>
-              <button className="hover:bg-gray-200">Delete</button>
+              <button
+                className="hover:bg-gray-200"
+                onClick={() => {
+                  deleteBoard(props.id);
+                  props.deleteBoardCB(props.id);
+                  setShowMenu(false);
+                }}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>

@@ -11,7 +11,6 @@ import { getBoards } from "../../utils/apiUtils";
 import BoardCard from "../cards/BoardCard";
 
 type BoardList = {
-  count: number;
   boards: Board[];
 };
 
@@ -20,12 +19,21 @@ type InitializeBoards = {
   payload: BoardList;
 };
 
-type BoardAction = InitializeBoards;
+type DeleteBoard = {
+  type: "DELETE_BOARD";
+  payload: number;
+};
+
+type BoardAction = InitializeBoards | DeleteBoard;
 
 const boardsReducer = (state: BoardList, action: BoardAction) => {
   switch (action.type) {
     case "INITIALIZE_BOARDS":
       return action.payload;
+    case "DELETE_BOARD":
+      return {
+        boards: state.boards.filter((board) => board.id !== action.payload),
+      };
     default:
       return state;
   }
@@ -33,7 +41,6 @@ const boardsReducer = (state: BoardList, action: BoardAction) => {
 
 const Boards = () => {
   const [boards, dispatch] = useReducer(boardsReducer, {
-    count: 0,
     boards: [],
   });
   const [newBoard, setNewBoard] = useState(false);
@@ -50,7 +57,6 @@ const Boards = () => {
           dispatch({
             type: "INITIALIZE_BOARDS",
             payload: {
-              count: data.count,
               boards: data.results,
             },
           });
@@ -84,6 +90,12 @@ const Boards = () => {
               id={board.id}
               title={board.title}
               description={board.description}
+              deleteBoardCB={(id: number) => {
+                dispatch({
+                  type: "DELETE_BOARD",
+                  payload: id,
+                });
+              }}
             />
           ))}
       </div>
