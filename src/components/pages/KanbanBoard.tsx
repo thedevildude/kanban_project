@@ -5,7 +5,12 @@ import { CgAddR } from "react-icons/cg";
 import Modal from "../modals/modal";
 import CreateTask from "../InputComponents/CreateTask";
 import { Task, TaskStatus } from "../../types/taskTypes";
-import { getBoard, getStatuses, getTasks } from "../../utils/apiUtils";
+import {
+  deleteTask,
+  getBoard,
+  getStatuses,
+  getTasks,
+} from "../../utils/apiUtils";
 import { Pagination } from "../../types/common";
 import { navigate } from "raviger";
 import { Board } from "../../types/boardTypes";
@@ -28,7 +33,12 @@ type AddTask = {
   payload: Task;
 };
 
-type TaskAction = InitializeTasks | AddTask;
+type DeleteTask = {
+  type: "DELETE_TASK";
+  payload: number;
+};
+
+type TaskAction = InitializeTasks | AddTask | DeleteTask;
 
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
@@ -44,6 +54,11 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
       return {
         ...state,
         tasks: [...state.tasks, action.payload],
+      };
+    case "DELETE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
     default:
       return state;
@@ -115,7 +130,17 @@ const KanbanBoard = (props: { boardId: number }) => {
           />
         </Modal>
       </div>
-      <TaskContainer statuses={state.statuses} tasks={state.tasks} />
+      <TaskContainer
+        statuses={state.statuses}
+        tasks={state.tasks}
+        deleteTaskCB={(taskId: number) => {
+          deleteTask(props.boardId, taskId);
+          dispatch({
+            type: "DELETE_TASK",
+            payload: taskId,
+          });
+        }}
+      />
     </div>
   );
 };

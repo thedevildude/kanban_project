@@ -94,3 +94,7 @@ export const getTasks = async (
 export const createTask = async (task: Task) => {
   return await request(`boards/${task.board}/tasks/`, "POST", task);
 };
+
+export const deleteTask = async (boardId: number, id: number) => {
+  return await request(`boards/${boardId}/tasks/${id}/`, "DELETE");
+}

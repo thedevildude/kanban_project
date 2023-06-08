@@ -8,6 +8,7 @@ type Props = {
   title: string;
   description: string;
   tasks: Task[];
+  deleteTaskCB: (taskId: number) => void;
 };
 
 const StatusContainer = (props: Props) => {
@@ -19,13 +20,14 @@ const StatusContainer = (props: Props) => {
           <CgAddR className="h-5 w-5" />
         </button>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 h-screen overflow-auto">
         {props.tasks.map((task) => (
           <TaskCard
             key={task.id}
-            id={task.id}
-            title={task.title}
-            description={task.description}
+            task={task}
+            deleteTaskCardCB={(taskId) => {
+              props.deleteTaskCB(taskId);
+            }}
           />
         ))}
       </div>

@@ -16,12 +16,12 @@ const Layout = (props: { children: React.ReactNode }) => {
       <SideMenu isOpen={isMenuOpen} />
       {isMenuOpen ? (
         <BiChevronLeft
-          className="h-8 w-8 text-gray-500 cursor-pointer fixed top-8 left-28 z-10"
+          className="h-8 w-8 text-gray-500 cursor-pointer absolute top-8 left-28 z-10"
           onClick={toggleMenu}
         />
       ) : (
         <BiMenu
-          className="h-8 w-8 text-gray-500 cursor-pointer fixed top-8 left-28 z-10"
+          className="h-8 w-8 text-gray-500 cursor-pointer absolute top-8 left-28 z-10"
           onClick={toggleMenu}
         />
       )}

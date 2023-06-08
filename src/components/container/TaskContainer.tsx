@@ -5,6 +5,7 @@ import StatusContainer from "./StatusContainer";
 type Props = {
   tasks: Task[];
   statuses: TaskStatus[];
+  deleteTaskCB: (taskId: number) => void;
 };
 
 const TaskContainer = (props: Props) => {
@@ -19,6 +20,7 @@ const TaskContainer = (props: Props) => {
           tasks={props.tasks.filter(
             (task) => task.status_object?.id === status.id
           )}
+          deleteTaskCB={props.deleteTaskCB}
         />
       ))}
     </div>
