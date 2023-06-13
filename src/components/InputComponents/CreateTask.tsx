@@ -13,7 +13,9 @@ const CreateTask = (props: {
     title: "",
     description: "",
     status: 1,
-    board: props.boardId
+    board: props.boardId,
+    duedate: "",
+    duetime: "",
   });
   const [errors, setErrors] = useState<Errors<Task>>({});
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +24,10 @@ const CreateTask = (props: {
     setErrors(validateErrors);
     if (Object.keys(validateErrors).length === 0) {
       try {
-        const data: Task = await createTask(task);
+        const data: Task = await createTask({
+          ...task,
+          duedate: new Date(task.duedate + "T" + task.duetime).toISOString(),
+        });
         props.addTaskCB(data);
         props.closeModelCB();
       } catch (error) {
@@ -70,6 +75,39 @@ const CreateTask = (props: {
           {errors.description && (
             <p className="text-red-500 text-sm">{errors.description}</p>
           )}
+        </div>
+        <div className="mb-4">
+          <TextInput
+            label="Due Date"
+            placeholder="task due date"
+            value={task.duedate}
+            type="date"
+            id="duedate"
+            handleChangeCB={(e) =>
+              setTask({
+                ...task,
+                duedate: e.target.value,
+              })
+            }
+          />
+          {errors.duedate && (
+            <p className="text-red-500 text-sm">{errors.duedate}</p>
+          )}
+          <div className="mb-4">
+            <TextInput
+              label="Due Time"
+              placeholder="task due time"
+              value={task.duetime}
+              type="time"
+              id="duetime"
+              handleChangeCB={(e) =>
+                setTask({
+                  ...task,
+                  duetime: e.target.value,
+                })
+              }
+            />
+          </div>
         </div>
         <div className="flex justify-end">
           <button

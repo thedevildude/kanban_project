@@ -6,6 +6,7 @@ export type Task = {
   description: string;
   board_object?: Board;
   status_object?: TaskStatus;
+  duedate?: string;
   status: number;
   board?: number;
 };
@@ -25,6 +26,18 @@ export const validateTask = (board: Omit<Task, "id">) => {
   }
   if (board.title.length > 100) {
     errors.title = "Title must be less than 100 characters";
+  }
+  if (board.description.length < 1) {
+    errors.description = "Description is required";
+  }
+  if (board.description.length > 100) {
+    errors.description = "Description must be less than 100 characters";
+  }
+  if (board.duedate) {
+    const date = new Date(board.duedate);
+    if (date < new Date()) {
+      errors.duedate = "Due date must be in the future";
+    }
   }
   return errors;
 };
