@@ -17,18 +17,26 @@ import { Board } from "../../types/boardTypes";
 import TaskContainer from "../container/TaskContainer";
 import TaskEditor from "../InputComponents/TaskEditor";
 import { AiOutlineEdit } from "react-icons/ai";
+import { BsGrid1X2, BsViewList } from "react-icons/bs";
 import BoardEditor from "../InputComponents/BoardEditor";
+import ListView from "./ListView";
 
 type TaskList = {
   title: string;
   description: string;
   statuses: TaskStatus[];
   tasks: Task[];
+  view: string;
 };
 
 type InitializeTasks = {
   type: "INITIALIZE_TASKS";
   payload: TaskList;
+};
+
+type SetView = {
+  type: "SET_VIEW";
+  payload: string;
 };
 
 type UpdateBoard = {
@@ -57,7 +65,8 @@ type TaskAction =
   | AddTask
   | DeleteTask
   | UpdateTask
-  | UpdateBoard;
+  | UpdateBoard
+  | SetView;
 
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
@@ -68,6 +77,12 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
         description: action.payload.description,
         tasks: action.payload.tasks,
         statuses: action.payload.statuses,
+        view: action.payload.view,
+      };
+    case "SET_VIEW":
+      return {
+        ...state,
+        view: action.payload,
       };
     case "UPDATE_BOARD":
       return {
@@ -109,6 +124,7 @@ const KanbanBoard = (props: { boardId: number }) => {
     description: "",
     tasks: [],
     statuses: [],
+    view: localStorage.getItem("view") || "kanban",
   });
 
   useEffect(() => {
@@ -129,6 +145,7 @@ const KanbanBoard = (props: { boardId: number }) => {
               description: boardData.description,
               tasks: data.results,
               statuses: statusData.results,
+              view: localStorage.getItem("view") || "kanban",
             },
           });
         }
@@ -168,11 +185,43 @@ const KanbanBoard = (props: { boardId: number }) => {
           triggerText="Filter"
           items={["Personal Boards", "Team Boards"]}
         />
-        <AddNewButton
-          buttonClickCB={() => setNewTask(true)}
-          label="New Task"
-          icon={<CgAddR className="h-5 w-5" />}
-        />
+        <div className="flex items-center gap-5">
+          <AddNewButton
+            buttonClickCB={() => setNewTask(true)}
+            label="New Task"
+            icon={<CgAddR className="h-5 w-5" />}
+          />
+          <div className="flex items-center border-2 border-gray-500 rounded-md">
+            <button
+              className={`text-gray-500 hover:text-gray-700 p-2 ${
+                state.view === "kanban" ? "bg-gray-200" : ""
+              }`}
+              onClick={() => {
+                localStorage.setItem("view", "kanban");
+                dispatch({
+                  type: "SET_VIEW",
+                  payload: "kanban",
+                });
+              }}
+            >
+              <BsGrid1X2 className="w-5 h-5" />
+            </button>
+            <button
+              className={`text-gray-500 hover:text-gray-700 p-2 ${
+                state.view === "list" ? "bg-gray-200" : ""
+              }`}
+              onClick={() => {
+                localStorage.setItem("view", "list");
+                dispatch({
+                  type: "SET_VIEW",
+                  payload: "list",
+                });
+              }}
+            >
+              <BsViewList className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
         <Modal open={newTask} closeCB={() => setNewTask(false)}>
           <CreateTask
             boardId={props.boardId}
@@ -217,20 +266,36 @@ const KanbanBoard = (props: { boardId: number }) => {
           />
         </Modal>
       </div>
-      <TaskContainer
-        statuses={state.statuses}
-        tasks={state.tasks}
-        deleteTaskCB={(taskId: number) => {
-          deleteTask(props.boardId, taskId);
-          dispatch({
-            type: "DELETE_TASK",
-            payload: taskId,
-          });
-        }}
-        setTaskEditor={(taskEditor: boolean, taskId: number) =>
-          setTaskEditor({ taskEditor, taskId })
-        }
-      />
+      {state.view === "kanban" ? (
+        <TaskContainer
+          statuses={state.statuses}
+          tasks={state.tasks}
+          deleteTaskCB={(taskId: number) => {
+            deleteTask(props.boardId, taskId);
+            dispatch({
+              type: "DELETE_TASK",
+              payload: taskId,
+            });
+          }}
+          setTaskEditor={(taskEditor: boolean, taskId: number) =>
+            setTaskEditor({ taskEditor, taskId })
+          }
+        />
+      ) : (
+        <ListView
+          tasks={state.tasks}
+          deleteTaskCB={(taskId: number) => {
+            deleteTask(props.boardId, taskId);
+            dispatch({
+              type: "DELETE_TASK",
+              payload: taskId,
+            });
+          }}
+          setTaskEditor={(taskEditor: boolean, taskId: number) =>
+            setTaskEditor({ taskEditor, taskId })
+          }
+        />
+      )}
     </div>
   );
 };
