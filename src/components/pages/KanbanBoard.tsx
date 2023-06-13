@@ -189,12 +189,13 @@ const KanbanBoard = (props: { boardId: number }) => {
         </Modal>
         <Modal
           open={taskEditor.taskEditor}
-          closeCB={() =>
+          closeCB={() => {
             setTaskEditor({
               taskEditor: false,
               taskId: 0,
-            })
-          }
+            });
+            window.location.reload();
+          }}
         >
           <TaskEditor
             boardId={props.boardId}
