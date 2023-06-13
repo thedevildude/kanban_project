@@ -15,6 +15,7 @@ import { Pagination } from "../../types/common";
 import { navigate } from "raviger";
 import { Board } from "../../types/boardTypes";
 import TaskContainer from "../container/TaskContainer";
+import TaskEditor from "../InputComponents/TaskEditor";
 
 type TaskList = {
   title: string;
@@ -38,7 +39,13 @@ type DeleteTask = {
   payload: number;
 };
 
-type TaskAction = InitializeTasks | AddTask | DeleteTask;
+type UpdateTask = {
+  type: "UPDATE_TASK";
+  taskId: number;
+  payload: Partial<Task>;
+};
+
+type TaskAction = InitializeTasks | AddTask | DeleteTask | UpdateTask;
 
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
@@ -60,6 +67,14 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
         ...state,
         tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
+    case "UPDATE_TASK":
+      console.log(action.payload);
+      return {
+        ...state,
+        tasks: state.tasks.map((task) =>
+          task.id === action.taskId ? { ...task, ...action.payload } : task
+        ),
+      };
     default:
       return state;
   }
@@ -67,6 +82,10 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
 
 const KanbanBoard = (props: { boardId: number }) => {
   const [newTask, setNewTask] = useState(false);
+  const [taskEditor, setTaskEditor] = useState({
+    taskEditor: false,
+    taskId: 0,
+  });
   const [state, dispatch] = useReducer(taskReducer, {
     title: "",
     description: "",
@@ -129,6 +148,34 @@ const KanbanBoard = (props: { boardId: number }) => {
             }
           />
         </Modal>
+        <Modal
+          open={taskEditor.taskEditor}
+          closeCB={() =>
+            setTaskEditor({
+              taskEditor: false,
+              taskId: 0,
+            })
+          }
+        >
+          <TaskEditor
+            boardId={props.boardId}
+            taskId={taskEditor.taskId}
+            updateTaskCB={(taskId: number, task: Partial<Task>) =>
+              dispatch({
+                type: "UPDATE_TASK",
+                taskId,
+                payload: task,
+              })
+            }
+            closeModelCB={() =>
+              setTaskEditor({
+                taskEditor: false,
+                taskId: 0,
+              })
+            }
+            statuses={state.statuses}
+          />
+        </Modal>
       </div>
       <TaskContainer
         statuses={state.statuses}
@@ -140,6 +187,9 @@ const KanbanBoard = (props: { boardId: number }) => {
             payload: taskId,
           });
         }}
+        setTaskEditor={(taskEditor: boolean, taskId: number) =>
+          setTaskEditor({ taskEditor, taskId })
+        }
       />
     </div>
   );

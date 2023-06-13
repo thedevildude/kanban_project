@@ -9,6 +9,7 @@ type Props = {
   description: string;
   tasks: Task[];
   deleteTaskCB: (taskId: number) => void;
+  setTaskEditorCB: (taskEditor: boolean, taskId: number) => void;
 };
 
 const StatusContainer = (props: Props) => {
@@ -28,6 +29,9 @@ const StatusContainer = (props: Props) => {
             deleteTaskCardCB={(taskId) => {
               props.deleteTaskCB(taskId);
             }}
+            openTaskEditorCB={(taskEditor: boolean, taskId: number) =>
+              props.setTaskEditorCB(taskEditor, taskId)
+            }
           />
         ))}
       </div>
