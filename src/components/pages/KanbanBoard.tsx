@@ -16,6 +16,8 @@ import { navigate } from "raviger";
 import { Board } from "../../types/boardTypes";
 import TaskContainer from "../container/TaskContainer";
 import TaskEditor from "../InputComponents/TaskEditor";
+import { AiOutlineEdit } from "react-icons/ai";
+import BoardEditor from "../InputComponents/BoardEditor";
 
 type TaskList = {
   title: string;
@@ -27,6 +29,11 @@ type TaskList = {
 type InitializeTasks = {
   type: "INITIALIZE_TASKS";
   payload: TaskList;
+};
+
+type UpdateBoard = {
+  type: "UPDATE_BOARD";
+  payload: Partial<Board>;
 };
 
 type AddTask = {
@@ -45,7 +52,12 @@ type UpdateTask = {
   payload: Partial<Task>;
 };
 
-type TaskAction = InitializeTasks | AddTask | DeleteTask | UpdateTask;
+type TaskAction =
+  | InitializeTasks
+  | AddTask
+  | DeleteTask
+  | UpdateTask
+  | UpdateBoard;
 
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
@@ -56,6 +68,12 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
         description: action.payload.description,
         tasks: action.payload.tasks,
         statuses: action.payload.statuses,
+      };
+    case "UPDATE_BOARD":
+      return {
+        ...state,
+        title: action.payload.title || state.title,
+        description: action.payload.description || state.description,
       };
     case "ADD_TASK":
       return {
@@ -85,6 +103,7 @@ const KanbanBoard = (props: { boardId: number }) => {
     taskEditor: false,
     taskId: 0,
   });
+  const [boardEditor, setBoardEditor] = useState(false);
   const [state, dispatch] = useReducer(taskReducer, {
     title: "",
     description: "",
@@ -122,7 +141,28 @@ const KanbanBoard = (props: { boardId: number }) => {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <p className="text-2xl font-bold">{state.title}</p>
+      <div className="flex items-center gap-5">
+        <p className="text-2xl font-bold">{state.title}</p>
+        <button
+          className="text-gray-500 hover:text-gray-700"
+          onClick={() => setBoardEditor(true)}
+        >
+          <AiOutlineEdit className="w-5 h-5" />
+        </button>
+        <Modal open={boardEditor} closeCB={() => setBoardEditor(false)}>
+          <BoardEditor
+            boardId={props.boardId}
+            updateBoardCB={(board: Partial<Board>) =>
+              dispatch({
+                type: "UPDATE_BOARD",
+                payload: board,
+              })
+            }
+            closeModelCB={() => setBoardEditor(false)}
+          />
+        </Modal>
+      </div>
+      <p className="text-gray-500">{state.description}</p>
       <div className="flex justify-between">
         <DropdownMenu
           triggerText="Filter"

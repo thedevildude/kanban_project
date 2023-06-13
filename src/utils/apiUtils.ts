@@ -76,6 +76,10 @@ export const getBoard = async (id: number) => {
   return await request(`boards/${id}/`, "GET");
 };
 
+export const updateBoard = async (boardId: number, board: Partial<Board>) => {
+  return await request(`boards/${boardId}/`, "PATCH", board);
+};
+
 export const deleteBoard = async (id: number) => {
   return await request(`boards/${id}/`, "DELETE");
 };
