@@ -68,7 +68,6 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
         tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
     case "UPDATE_TASK":
-      console.log(action.payload);
       return {
         ...state,
         tasks: state.tasks.map((task) =>
