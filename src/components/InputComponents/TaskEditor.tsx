@@ -9,7 +9,7 @@ type Props = {
   taskId: number;
   closeModelCB: () => void;
   statuses: TaskStatus[];
-  updateTaskCB: (taskId: number, task:Partial<Task>) => void;
+  updateTaskCB: (taskId: number, task: Partial<Task>) => void;
 };
 
 const TaskEditor = (props: Props) => {
@@ -18,6 +18,7 @@ const TaskEditor = (props: Props) => {
     description: "",
     status: 0,
   });
+  const [taskDue, setTaskDue] = useState("");
   const [errors, setErrors] = useState<Errors<Task>>({});
   useEffect(() => {
     if (props.taskId === 0) return;
@@ -27,8 +28,7 @@ const TaskEditor = (props: Props) => {
         description: task.description,
         status: task.status_object?.id || 0,
       });
-      console.log(task);
-      
+      setTaskDue(task.duedate ? new Date(task.duedate).toISOString() : "");
     });
   }, [props.boardId, props.taskId]);
 
@@ -45,13 +45,29 @@ const TaskEditor = (props: Props) => {
       }
     if (Object.keys(errors).length === 0) {
       try {
-        await updateTask(props.boardId, props.taskId, {...task, ...data});
+        await updateTask(props.boardId, props.taskId, { ...task, ...data });
         props.updateTaskCB(props.taskId, data);
       } catch (error) {
         console.log(error);
       }
     } else {
       setErrors(errors);
+    }
+  };
+
+  const handleTaskDueUpdate = async (data: string, type: string) => {
+    if (type === "date") {
+      setTaskDue(data + "T" + taskDue.split("T")[1]);
+      await updateTask(props.boardId, props.taskId, {
+        ...task,
+        duedate: data + "T" + taskDue.split("T")[1],
+      });
+    } else if (type === "time") {
+      setTaskDue(taskDue.split("T")[0] + "T" + data);
+      await updateTask(props.boardId, props.taskId, {
+        ...task,
+        duedate: taskDue.split("T")[0] + "T" + data,
+      });
     }
   };
 
@@ -94,16 +110,13 @@ const TaskEditor = (props: Props) => {
           )}
         </div>
         <div className="mb-4">
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="status" className="font-semibold">
             Status
           </label>
           <select
             id="status"
             name="status"
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             value={task.status}
             onChange={(e) =>
               handleTaskUpdate({
@@ -117,6 +130,30 @@ const TaskEditor = (props: Props) => {
               </option>
             ))}
           </select>
+        </div>
+        <div className="mb-4">
+          <TextInput
+            label="Due Date"
+            placeholder="task due date"
+            value={(taskDue.length > 0 && taskDue.split("T")[0]) || ""}
+            type="date"
+            id="dueDate"
+            handleChangeCB={(e) => handleTaskDueUpdate(e.target.value, "date")}
+          />
+        </div>
+        <div className="mb-4">
+          <TextInput
+            label="Due Time"
+            placeholder="task due time"
+            value={
+              (taskDue.length > 0 &&
+                new Date(taskDue).toTimeString().split(" ")[0]) ||
+              ""
+            }
+            type="time"
+            id="dueTime"
+            handleChangeCB={(e) => handleTaskDueUpdate(e.target.value, "time")}
+          />
         </div>
       </div>
     </div>
