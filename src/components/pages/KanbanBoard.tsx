@@ -20,6 +20,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { BsGrid1X2, BsViewList } from "react-icons/bs";
 import BoardEditor from "../InputComponents/BoardEditor";
 import ListView from "./ListView";
+import CreateStatus from "../InputComponents/CreateStatus";
 
 type TaskList = {
   title: string;
@@ -60,13 +61,19 @@ type UpdateTask = {
   payload: Partial<Task>;
 };
 
+type AddStatus = {
+  type: "ADD_STATUS";
+  payload: TaskStatus;
+};
+
 type TaskAction =
   | InitializeTasks
   | AddTask
   | DeleteTask
   | UpdateTask
   | UpdateBoard
-  | SetView;
+  | SetView
+  | AddStatus;
 
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
@@ -107,6 +114,11 @@ const taskReducer = (state: TaskList, action: TaskAction) => {
           task.id === action.taskId ? { ...task, ...action.payload } : task
         ),
       };
+    case "ADD_STATUS":
+      return {
+        ...state,
+        statuses: [...state.statuses, action.payload],
+      };
     default:
       return state;
   }
@@ -119,6 +131,7 @@ const KanbanBoard = (props: { boardId: number }) => {
     taskId: 0,
   });
   const [boardEditor, setBoardEditor] = useState(false);
+  const [newStage, setNewStage] = useState(false);
   const [state, dispatch] = useReducer(taskReducer, {
     title: "",
     description: "",
@@ -187,6 +200,11 @@ const KanbanBoard = (props: { boardId: number }) => {
         />
         <div className="flex items-center gap-5">
           <AddNewButton
+            buttonClickCB={() => setNewStage(true)}
+            label="Add Stage"
+            icon={<CgAddR className="h-5 w-5" />}
+          />
+          <AddNewButton
             buttonClickCB={() => setNewTask(true)}
             label="New Task"
             icon={<CgAddR className="h-5 w-5" />}
@@ -235,6 +253,17 @@ const KanbanBoard = (props: { boardId: number }) => {
               })
             }
             statuses={state.statuses}
+          />
+        </Modal>
+        <Modal open={newStage} closeCB={() => setNewStage(false)}>
+          <CreateStatus
+            closeModelCB={() => setNewStage(false)}
+            addStatusCB={(status) =>
+              dispatch({
+                type: "ADD_STATUS",
+                payload: status,
+              })
+            }
           />
         </Modal>
         <Modal

@@ -88,6 +88,10 @@ export const getStatuses = async (pageParams?: PaginationParams) => {
   return await request("status/", "GET", pageParams);
 };
 
+export const createStatus = async (title: string, description: string) => {
+  return await request("status/", "POST", { title, description });
+};
+
 export const getTasks = async (
   boardId: number,
   pageParams?: PaginationParams
@@ -105,8 +109,12 @@ export const createTask = async (task: Task) => {
 
 export const deleteTask = async (boardId: number, id: number) => {
   return await request(`boards/${boardId}/tasks/${id}/`, "DELETE");
-}
+};
 
-export const updateTask = async (boardId: number, taskId: number, data: Partial<Task>) => {
+export const updateTask = async (
+  boardId: number,
+  taskId: number,
+  data: Partial<Task>
+) => {
   return await request(`boards/${boardId}/tasks/${taskId}/`, "PATCH", data);
-}
+};
