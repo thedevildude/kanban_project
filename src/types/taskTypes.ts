@@ -34,8 +34,9 @@ export const validateTask = (board: Omit<Task, "id">) => {
     errors.description = "Description must be less than 100 characters";
   }
   if (board.duedate) {
-    const date = new Date(board.duedate);
-    if (date < new Date()) {
+    const date = new Date(board.duedate).toISOString().split("T")[0];;
+    const today = new Date().toISOString().split("T")[0];;
+    if (date < today) {
       errors.duedate = "Due date must be in the future";
     }
   }
