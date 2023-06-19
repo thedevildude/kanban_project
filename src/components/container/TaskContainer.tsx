@@ -15,11 +15,11 @@ const TaskContainer = (props: Props) => {
       {props.statuses.map((status) => (
         <StatusContainer
           key={status.id}
-          statusId={status.id}
-          title={status.title}
-          description={status.description}
-          tasks={props.tasks.filter(
-            (task) => task.status_object?.id === status.id
+          status={status}
+          tasks={props.tasks.filter((task) =>
+            task.status
+              ? task.status === status.id
+              : task.status_object?.id === status.id
           )}
           deleteTaskCB={props.deleteTaskCB}
           setTaskEditorCB={(taskEditor: boolean, taskId: number) =>

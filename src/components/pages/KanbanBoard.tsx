@@ -269,7 +269,6 @@ const KanbanBoard = (props: { boardId: number }) => {
               taskEditor: false,
               taskId: 0,
             });
-            window.location.reload();
           }}
         >
           <TaskEditor
