@@ -21,14 +21,10 @@ const ListView = (props: Props) => {
           props.tasks.filter((task) => {
             const dueDate = new Date(task.duedate ? task.duedate : "");
             const currentDate = new Date();
-
             return (
               dueDate.toISOString().split("T")[0] ===
                 currentDate.toISOString().split("T")[0] &&
-              dueDate > currentDate &&
-              task.status_object?.title !== "Done" &&
-              task.status_object?.title !== "Archive" &&
-              task.status_object?.title !== "Completed"
+              task.status_object?.title !== ("Done" || "Completed" || "Archive")
             );
           })
         );
@@ -42,10 +38,7 @@ const ListView = (props: Props) => {
             return (
               dueDate.toISOString().split("T")[0] ===
                 tomorrow.toISOString().split("T")[0] &&
-              dueDate > tomorrow &&
-              task.status_object?.title !== "Done" &&
-              task.status_object?.title !== "Archive" &&
-              task.status_object?.title !== "Completed"
+              task.status_object?.title !== ("Done" || "Completed" || "Archive")
             );
           })
         );
@@ -57,9 +50,7 @@ const ListView = (props: Props) => {
 
             return (
               dueDate < currentDate &&
-              task.status_object?.title !== "Done" &&
-              task.status_object?.title !== "Archive" &&
-              task.status_object?.title !== "Completed"
+              task.status_object?.title !== ("Done" || "Completed" || "Archive")
             );
           })
         );
