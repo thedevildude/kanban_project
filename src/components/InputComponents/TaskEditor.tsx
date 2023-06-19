@@ -56,19 +56,21 @@ const TaskEditor = (props: Props) => {
   };
 
   const handleTaskDueUpdate = async (data: string, type: string) => {
+    let updatedTask
     if (type === "date") {
       setTaskDue(data + "T" + taskDue.split("T")[1]);
-      await updateTask(props.boardId, props.taskId, {
+      updatedTask = await updateTask(props.boardId, props.taskId, {
         ...task,
         duedate: data + "T" + taskDue.split("T")[1],
       });
     } else if (type === "time") {
       setTaskDue(taskDue.split("T")[0] + "T" + data);
-      await updateTask(props.boardId, props.taskId, {
+      updatedTask = await updateTask(props.boardId, props.taskId, {
         ...task,
         duedate: taskDue.split("T")[0] + "T" + data,
       });
     }
+    props.updateTaskCB(props.taskId, {duedate: updatedTask.duedate})
   };
 
   return (
