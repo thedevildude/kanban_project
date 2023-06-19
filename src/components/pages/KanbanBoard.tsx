@@ -234,6 +234,7 @@ const KanbanBoard = (props: { boardId: number }) => {
                 },
               })
             }
+            statuses={state.statuses}
           />
         </Modal>
         <Modal

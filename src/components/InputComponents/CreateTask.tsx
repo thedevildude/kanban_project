@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Task, Errors, validateTask } from "../../types/taskTypes";
+import { Task, Errors, validateTask, TaskStatus } from "../../types/taskTypes";
 import { createTask } from "../../utils/apiUtils";
 import TextInput from "./TextInput";
 
 const CreateTask = (props: {
   boardId: number;
   addTaskCB: (task: Task) => void;
+  statuses: TaskStatus[];
   closeModelCB: () => void;
 }) => {
   const [task, setTask] = useState({
@@ -108,6 +109,29 @@ const CreateTask = (props: {
               }
             />
           </div>
+          <div className="mb-4">
+          <label htmlFor="status" className="font-semibold">
+            Status
+          </label>
+          <select
+            id="status"
+            name="status"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            value={task.status}
+            onChange={(e) =>
+              setTask({
+                ...task,
+                status: Number(e.target.value)
+              })
+            }
+          >
+            {props.statuses.map((status) => (
+              <option key={status.id} value={status.id}>
+                {status.title}
+              </option>
+            ))}
+          </select>
+        </div>
         </div>
         <div className="flex justify-end">
           <button
