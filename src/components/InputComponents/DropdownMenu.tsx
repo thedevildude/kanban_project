@@ -1,9 +1,14 @@
 import React from "react";
 
-const DropdownMenu = (props: { triggerText: string; items: string[] }) => {
+type Props = {
+  triggerText: string;
+  items: string[];
+  handleDropdownCB: (item: string) => void;
+};
+
+const DropdownMenu = (props: Props) => {
   const handleItemClick = (item: string) => {
-    // Handle item click logic here
-    console.log("Clicked item:", item);
+    props.handleDropdownCB(item);
   };
 
   return (

@@ -1,5 +1,4 @@
 import React, { useState, useReducer, useEffect } from "react";
-import DropdownMenu from "../InputComponents/DropdownMenu";
 import AddNewButton from "../buttons/AddNewButton";
 import { CgAddR } from "react-icons/cg";
 import Modal from "../modals/modal";
@@ -74,7 +73,6 @@ type TaskAction =
   | UpdateBoard
   | SetView
   | AddStatus;
-
 const taskReducer = (state: TaskList, action: TaskAction) => {
   switch (action.type) {
     case "INITIALIZE_TASKS":
@@ -193,11 +191,9 @@ const KanbanBoard = (props: { boardId: number }) => {
         </Modal>
       </div>
       <p className="text-gray-500">{state.description}</p>
-      <div className="flex justify-between">
-        <DropdownMenu
-          triggerText="Filter"
-          items={["Personal Boards", "Team Boards"]}
-        />
+      <div
+        className="flex justify-end"
+      >
         <div className="flex items-center gap-5">
           <AddNewButton
             buttonClickCB={() => setNewStage(true)}
